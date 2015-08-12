@@ -45,10 +45,20 @@ angular.module('ImgCache', [])
         },
         link: function(scope, el, attrs) {
 
+            var getCordovaURL = function(src) {
+                var cachedName = ImgCache.private.getCachedFileName(src);
+                var dest = 'cdvfile://localhost/' + (ImgCache.options.usePersistentCache ? 'persistent' : 'temporary') + '/' + ImgCache.options.localCacheFolder + '/' + cachedName;
+                return dest;
+            }
+
             var setImg = function(type, el, src) {
 
                 ImgCache.getCachedFileURL(src, function(src, dest) {
-
+                    // if running in Cordova then we need to override the local URL
+                    if (ImgCache.helpers.isCordova()) {
+                        dest = getCordovaURL(src);
+                    };
+                    
                     if(type === 'bg') {
                         el.css({'background-image': 'url(' + dest + ')' });
                     } else {
@@ -58,7 +68,6 @@ angular.module('ImgCache', [])
             }
 
             var loadImg = function(type, el, src) {
-
                 ImgCache.$promise.then(function() {
 
                     ImgCache.isCached(src, function(path, success) {
@@ -76,15 +85,17 @@ angular.module('ImgCache', [])
             }
 
             attrs.$observe('icSrc', function(src) {
-
-                loadImg('src', el, src);
-
+                if (src) {
+                    // stops empty src from triggering a download
+                    loadImg('src', el, src);
+                };
             });
 
             attrs.$observe('icBg', function(src) {
-
-                loadImg('bg', el, src);
-
+                if (src) {
+                    // stops empty src from triggering a download
+                    loadImg('bg', el, src);
+                }
             });
 
         }
