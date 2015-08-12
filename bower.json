@@ -21,7 +21,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "1.2.*",
-    "martinjbaker/imgcache.js": "*"
+    "angular": ">=1.2.*",
+    "imgcache.js": "*"
   }
 }
