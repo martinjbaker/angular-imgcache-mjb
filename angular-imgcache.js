@@ -62,7 +62,13 @@ angular.module('ImgCache', [])
                     if(type === 'bg') {
                         el.css({'background-image': 'url(' + dest + ')' });
                     } else {
-                        el.attr('src', dest);
+                        // nasty hack for ensuring reliable display of cached image in Ionic
+                        // from https://github.com/driftyco/ionic/issues/1742
+                        var currentElement = el;
+                        var newImg = el.clone(true);
+                        newImg.attr('src', dest);
+                        currentElement.replaceWith(newImg);
+                        currentElement = newImg;
                     }
                 });
             }
@@ -73,8 +79,10 @@ angular.module('ImgCache', [])
                     ImgCache.isCached(src, function(path, success) {
 
                         if (success) {
+                            // loading image from cache
                             setImg(type, el, src);
                         } else {
+                            // loading image from web
                             ImgCache.cacheFile(src, function() {
                                 setImg(type, el, src);
                             });
@@ -93,6 +101,10 @@ angular.module('ImgCache', [])
 
             attrs.$observe('icBg', function(src) {
                 if (src) {
+                    // we always remove the previous background image to stop original 
+                    // images still being shown in lists if new file fails to download
+                    el.removeAttr('style');
+
                     // stops empty src from triggering a download
                     loadImg('bg', el, src);
                 }
