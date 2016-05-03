@@ -101,10 +101,6 @@ angular.module('ImgCache', [])
 
             attrs.$observe('icBg', function(src) {
                 if (src) {
-                    // we always remove the previous background image to stop original 
-                    // images still being shown in lists if new file fails to download
-                    el.removeAttr('style');
-
                     // stops empty src from triggering a download
                     loadImg('bg', el, src);
                 }
