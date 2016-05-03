@@ -1,7 +1,7 @@
 {
   "name": "angular-imgcache-mjb",
   "main": "angular-imgcache.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/martinjbaker/angular-imgcache-mjb",
   "authors": [
     "Benes <benes@kodarna.cz>"
